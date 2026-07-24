@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Catálogo de Jogos</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<style>
+  :root{
+    --bg: #0b0e14;
+    --bg-alt: #11151f;
+    --neon: #7dffb3;
+    --neon-2: #7d9bff;
+    --text-muted: #9aa4b2;
+  }
+  body{
+    background: radial-gradient(circle at top, #141b2b 0%, var(--bg) 60%);
+    color: #e8ecf1;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    min-height: 100vh;
+  }
+  .navbar-brand{
+    font-weight: 700;
+    letter-spacing: .5px;
+    color: var(--neon) !important;
+  }
+  header.hero{
+    padding: 3rem 0 2rem;
+    text-align: center;
+  }
+  header.hero h1{
+    font-weight: 800;
+    text-shadow: 0 0 18px rgba(125,255,179,.35);
+  }
+  header.hero p{
+    color: var(--text-muted);
+  }
+  .game-card{
+    background: var(--bg-alt);
+    border: 1px solid rgba(125,255,179,.12);
+    border-radius: .9rem;
+    overflow: hidden;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+  }
+  .game-card:hover{
+    transform: translateY(-4px);
+    border-color: rgba(125,255,179,.5);
+    box-shadow: 0 10px 25px rgba(0,0,0,.4), 0 0 20px rgba(125,255,179,.08);
+  }
+  .game-cover{
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    background: linear-gradient(135deg, #1a2233, #0e131c);
+    display: block;
+  }
+  .game-body{
+    padding: 1rem 1.1rem 1.1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    flex-grow: 1;
+  }
+  .game-title{
+    font-size: .95rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    min-height: 2.6em;
+  }
+  .btn-buy{
+    background: linear-gradient(90deg, var(--neon), var(--neon-2));
+    border: none;
+    color: #06110b;
+    font-weight: 700;
+    border-radius: .6rem;
+    padding: .55rem 1rem;
+    width: 100%;
+  }
+  .btn-buy:hover{
+    filter: brightness(1.1);
+    color: #06110b;
+  }
+  .search-bar{
+    max-width: 480px;
+    margin: 0 auto 2rem;
+  }
+  footer{
+    text-align: center;
+    color: var(--text-muted);
+    padding: 2rem 0;
+    font-size: .85rem;
+  }
+</style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg">
+  <div class="container">
+    <span class="navbar-brand">🎮 Meu Catálogo de Jogos</span>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="container">
+    <h1>Catálogo de Jogos</h1>
+    <p>Clique no botão do jogo para ir direto até a página de compra na Instant Gaming.</p>
+  </div>
+</header>
+
+<div class="container">
+  <div class="search-bar">
+    <input type="text" id="searchInput" class="form-control" placeholder="Buscar jogo...">
+  </div>
+
+  <div class="row g-3" id="gameGrid"></div>
+</div>
+
+<footer>
+  Feito com Bootstrap • Links via Instant Gaming
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+const games = [
+  { name: "Bloomtown: A Different Story", url: "https://www.instant-gaming.com/en/14853-buy-bloomtown-a-different-story-pc-game-steam/?igr=eupqs" },
+  { name: "Trepang2", url: "https://www.instant-gaming.com/en/9571-buy-trepang2-pc-game-steam/?igr=eupqs" },
+  { name: "Tekken 8", url: "https://www.instant-gaming.com/en/9579-buy-tekken-8-pc-game-steam/?igr=eupqs" },
+  { name: "DOOM: The Dark Ages", url: "https://www.instant-gaming.com/en/16798-buy-doom-the-dark-ages-pc-game-steam/?igr=eupqs" },
+  { name: "Assassin's Creed Shadows", url: "https://www.instant-gaming.com/en/12831-buy-assassin-s-creed-shadows-pc-ubisoft-connect/?igr=eupqs" },
+  { name: "Blades of Fire", url: "https://www.instant-gaming.com/en/22604-buy-blades-of-fire-pc-steam/?igr=eupqs" },
+  { name: "Borderlands 4", url: "https://www.instant-gaming.com/en/19682-buy-borderlands-4-pc-steam/?igr=eupqs" },
+  { name: "NBA 2K25", url: "https://www.instant-gaming.com/en/17378-buy-nba-2k25-pc-game-steam-latin-america/?igr=eupqs" },
+  { name: "Sonic Superstars", url: "https://www.instant-gaming.com/en/14325-buy-sonic-superstars-pc-game-steam/?igr=eupqs" },
+  { name: "The Witness", url: "https://www.instant-gaming.com/en/1057-buy-the-witness-pc-mac-game-steam/?igr=eupqs" },
+  { name: "Sniper Elite V2 Remastered", url: "https://www.instant-gaming.com/en/4520-buy-sniper-elite-v2-remastered-remastered-pc-game-steam/?igr=eupqs" },
+  { name: "Horizon Zero Dawn Remastered", url: "https://www.instant-gaming.com/en/17919-buy-horizon-zero-dawn-remastered-pc-game-steam-latin-america/?igr=eupqs" },
+  { name: "Copycat", url: "https://www.instant-gaming.com/en/19346-buy-copycat-pc-mac-steam/?igr=eupqs" },
+  { name: "Midnight Fight Express", url: "https://www.instant-gaming.com/en/12655-buy-midnight-fight-express-pc-game-steam/?igr=eupqs" },
+  { name: "Octopath Traveler", url: "https://www.instant-gaming.com/en/4420-buy-octopath-traveler-pc-game-steam/?igr=eupqs" },
+  { name: "Octopath Traveler II", url: "https://www.instant-gaming.com/en/12870-buy-octopath-traveler-2-pc-game-steam/?igr=eupqs" },
+  { name: "Mortal Kombat 11", url: "https://www.instant-gaming.com/en/3339-buy-mortal-kombat-11-pc-game-steam/?igr=eupqs" },
+  { name: "Ori and the Will of the Wisps", url: "https://www.instant-gaming.com/en/19582-buy-ori-and-the-will-of-the-wisps-pc-game-steam/?igr=eupqs" },
+  { name: "DREDGE", url: "https://www.instant-gaming.com/en/13688-buy-dredge-pc-game-steam/?igr=eupqs" },
+  { name: "Death Stranding 2: On the Beach", url: "https://www.instant-gaming.com/en/21819-buy-death-stranding-2-on-the-beach-pc-steam/?igr=eupqs" },
+  { name: "Slime Rancher", url: "https://www.instant-gaming.com/en/18347-buy-slime-rancher-pc-game-steam-latin-america/" },
+  { name: "God of War Ragnarök", url: "https://www.instant-gaming.com/en/17024-buy-god-of-war-ragnarok-pc-game-steam-latin-america/?igr=eupqs" },
+  { name: "God of War", url: "https://www.instant-gaming.com/en/17355-buy-god-of-war-pc-game-steam-latin-america/?igr=eupqs" },
+  { name: "Session: Skate Sim", url: "https://www.instant-gaming.com/en/5735-buy-session-skate-sim-pc-game-steam/?igr=eupqs" },
+  { name: "Uncharted: Legacy of Thieves Collection", url: "https://www.instant-gaming.com/en/17533-buy-uncharted-legacy-of-thieves-collection-pc-game-steam-latin-america/?igr=eupqs" },
+  { name: "The Last of Us Part I", url: "https://www.instant-gaming.com/en/13960-buy-the-last-of-us-part-i-pc-game-steam-latin-america/?igr=eupqs" },
+  { name: "Marvel's Spider-Man Remastered", url: "https://www.instant-gaming.com/en/11907-buy-marvel-s-spider-man-remastered-pc-game-steam/?igr=eupqs" },
+  { name: "Marvel's Spider-Man: Miles Morales", url: "https://www.instant-gaming.com/en/17534-buy-marvel-s-spider-man-miles-morales-pc-game-steam-latin-america/?igr=eupqs" },
+  { name: "Marvel's Spider-Man 2", url: "https://www.instant-gaming.com/en/18626-buy-marvel-s-spider-man-2-pc-game-steam-latin-america/?igr=eupqs" },
+  { name: "Sackboy: A Big Adventure", url: "https://www.instant-gaming.com/en/18317-buy-sackboy-a-big-adventure-pc-game-steam-latin-america/?igr=eupqs" },
+  { name: "Until Dawn", url: "https://www.instant-gaming.com/en/17635-buy-until-dawn-pc-steam/?igr=eupqs" },
+  { name: "Days Gone", url: "https://www.instant-gaming.com/en/17532-buy-days-gone-pc-game-steam-latin-america/?igr=eupqs" },
+  { name: "The Last of Us Part II Remastered", url: "https://www.instant-gaming.com/en/18566-buy-the-last-of-us-part-ii-remastered-pc-game-steam-latin-america/?igr=eupqs" },
+  { name: "Returnal", url: "https://www.instant-gaming.com/en/13959-buy-returnal-pc-game-steam-latin-america/?igr=eupqs" },
+  { name: "Stray", url: "https://www.instant-gaming.com/en/17217-buy-stray-pc-mac-game-steam-latin-america/?igr=eupqs" },
+  { name: "Max Payne 3", url: "https://www.instant-gaming.com/en/6094-buy-max-payne-3-pc-game-rockstar/?igr=eupqs" },
+  { name: "Tekken 7", url: "https://www.instant-gaming.com/en/1515-buy-tekken-7-pc-game-steam/?igr=eupqs" },
+  { name: "Shadow of the Tomb Raider: Definitive Edition", url: "https://www.instant-gaming.com/en/20069-buy-shadow-of-the-tomb-raider-definitive-edition-pc-steam/?igr=eupqs" },
+  { name: "Alien: Isolation", url: "https://www.instant-gaming.com/en/305-buy-alien-isolation-pc-mac-game-steam/?igr=eupqs" },
+  { name: "Assetto Corsa Competizione", url: "https://www.instant-gaming.com/en/3153-buy-assetto-corsa-competizione-pc-steam/?igr=eupqs" },
+  { name: "Bramble: The Mountain King", url: "https://www.instant-gaming.com/en/13549-buy-bramble-the-mountain-king-pc-game-steam/?igr=eupqs" }
+];
+
+const grid = document.getElementById('gameGrid');
+
+// Chave da API RAWG (rawg.io) - usada só para buscar as capas dos jogos
+const RAWG_API_KEY = 'd6b850e7067a44b6b036afccf55cee5d';
+
+// Guarda as capas já buscadas para não repetir requisições (em memória, some ao recarregar a página)
+const coverCache = {};
+
+function placeholderSvg(name){
+  const initials = name.split(' ').slice(0,2).map(w => w[0]).join('').toUpperCase();
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="400" height="225">
+    <rect width="100%" height="100%" fill="#131a27"/>
+    <text x="50%" y="50%" font-family="Segoe UI, sans-serif" font-size="48" fill="#7dffb3"
+      text-anchor="middle" dominant-baseline="middle" opacity="0.6">${initials}</text>
+  </svg>`;
+  return 'data:image/svg+xml;base64,' + btoa(svg);
+}
+
+function renderGames(list){
+  grid.innerHTML = '';
+  list.forEach((game, index) => {
+    const col = document.createElement('div');
+    col.className = 'col-6 col-md-4 col-lg-3';
+    const imgId = `cover-${index}-${game.name.replace(/[^a-zA-Z0-9]/g, '')}`;
+    col.innerHTML = `
+      <div class="game-card">
+        <img id="${imgId}" class="game-cover" src="${placeholderSvg(game.name)}" alt="${game.name}">
+        <div class="game-body">
+          <div class="game-title">${game.name}</div>
+          <button class="btn btn-buy" onclick="window.open('${game.url}', '_blank')">${game.name}</button>
+        </div>
+      </div>
+    `;
+    grid.appendChild(col);
+    loadCover(game.name, imgId);
+  });
+}
+
+async function loadCover(name, imgId){
+  if (coverCache[name]) {
+    const el = document.getElementById(imgId);
+    if (el) el.src = coverCache[name];
+    return;
+  }
+  try {
+    const res = await fetch(`https://api.rawg.io/api/games?key=${RAWG_API_KEY}&search=${encodeURIComponent(name)}&page_size=1`);
+    if (!res.ok) return;
+    const data = await res.json();
+    const cover = data.results && data.results[0] && data.results[0].background_image;
+    if (cover) {
+      coverCache[name] = cover;
+      const el = document.getElementById(imgId);
+      if (el) el.src = cover;
+    }
+  } catch (err) {
+    // Se der erro (ex: sem internet, limite de requisições), mantém o placeholder
+    console.warn('Não foi possível carregar a capa de', name, err);
+  }
+}
+
+renderGames(games);
+
+document.getElementById('searchInput').addEventListener('input', (e) => {
+  const term = e.target.value.toLowerCase();
+  renderGames(games.filter(g => g.name.toLowerCase().includes(term)));
+});
+</script>
+
+</body>
+</html>
