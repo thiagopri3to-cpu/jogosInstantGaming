@@ -39,7 +39,7 @@
     background: var(--bg-alt);
     border: 1px solid rgba(125,255,179,.12);
     border-radius: .9rem;
-    padding: 1.1rem;
+    overflow: hidden;
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -51,8 +51,22 @@
     border-color: rgba(125,255,179,.5);
     box-shadow: 0 10px 25px rgba(0,0,0,.4), 0 0 20px rgba(125,255,179,.08);
   }
+  .game-cover{
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    background: linear-gradient(135deg, #1a2233, #0e131c);
+    display: block;
+  }
+  .game-body{
+    padding: 1rem 1.1rem 1.1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    flex-grow: 1;
+  }
   .game-title{
-    font-size: 1rem;
+    font-size: .95rem;
     font-weight: 600;
     margin-bottom: 1rem;
     min-height: 2.6em;
@@ -157,19 +171,62 @@ const games = [
 
 const grid = document.getElementById('gameGrid');
 
+// Chave da API RAWG (rawg.io) - usada só para buscar as capas dos jogos
+const RAWG_API_KEY = 'd6b850e7067a44b6b036afccf55cee5d';
+
+// Guarda as capas já buscadas para não repetir requisições (em memória, some ao recarregar a página)
+const coverCache = {};
+
+function placeholderSvg(name){
+  const initials = name.split(' ').slice(0,2).map(w => w[0]).join('').toUpperCase();
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="400" height="225">
+    <rect width="100%" height="100%" fill="#131a27"/>
+    <text x="50%" y="50%" font-family="Segoe UI, sans-serif" font-size="48" fill="#7dffb3"
+      text-anchor="middle" dominant-baseline="middle" opacity="0.6">${initials}</text>
+  </svg>`;
+  return 'data:image/svg+xml;base64,' + btoa(svg);
+}
+
 function renderGames(list){
   grid.innerHTML = '';
-  list.forEach(game => {
+  list.forEach((game, index) => {
     const col = document.createElement('div');
     col.className = 'col-6 col-md-4 col-lg-3';
+    const imgId = `cover-${index}-${game.name.replace(/[^a-zA-Z0-9]/g, '')}`;
     col.innerHTML = `
       <div class="game-card">
-        <div class="game-title">${game.name}</div>
-        <button class="btn btn-buy" onclick="window.open('${game.url}', '_blank')">${game.name}</button>
+        <img id="${imgId}" class="game-cover" src="${placeholderSvg(game.name)}" alt="${game.name}">
+        <div class="game-body">
+          <div class="game-title">${game.name}</div>
+          <button class="btn btn-buy" onclick="window.open('${game.url}', '_blank')">${game.name}</button>
+        </div>
       </div>
     `;
     grid.appendChild(col);
+    loadCover(game.name, imgId);
   });
+}
+
+async function loadCover(name, imgId){
+  if (coverCache[name]) {
+    const el = document.getElementById(imgId);
+    if (el) el.src = coverCache[name];
+    return;
+  }
+  try {
+    const res = await fetch(`https://api.rawg.io/api/games?key=${RAWG_API_KEY}&search=${encodeURIComponent(name)}&page_size=1`);
+    if (!res.ok) return;
+    const data = await res.json();
+    const cover = data.results && data.results[0] && data.results[0].background_image;
+    if (cover) {
+      coverCache[name] = cover;
+      const el = document.getElementById(imgId);
+      if (el) el.src = cover;
+    }
+  } catch (err) {
+    // Se der erro (ex: sem internet, limite de requisições), mantém o placeholder
+    console.warn('Não foi possível carregar a capa de', name, err);
+  }
 }
 
 renderGames(games);
