@@ -173,12 +173,9 @@ const games = [
   { name: "LEGO The Incredibles", url: "https://www.instant-gaming.com/en/2510-buy-lego-the-incredibles-pc-mac-game-steam/?igr=eupqs" },
   { name: "Heavy Rain", url: "https://www.instant-gaming.com/en/6999-buy-heavy-rain-pc-game-steam/?igr=eupqs" },
   { name: "LEGO Marvel Super Heroes", url: "https://www.instant-gaming.com/en/250-buy-lego-marvel-super-heroes-pc-mac-steam/?igr=eupqs" },
-  { name: "Bramble: The Mountain King", url: "https://www.instant-gaming.com/en/13549-buy-bramble-the-mountain-king-pc-game-steam/?igr=eupqs" },
   { name: "Planet of Lana", url: "https://www.instant-gaming.com/en/9004-buy-planet-of-lana-pc-game-steam/?igr=eupqs" },
-  { name: "The Witness", url: "https://www.instant-gaming.com/en/1057-buy-the-witness-pc-mac-game-steam/?igr=eupqs" },
   { name: "Green Hell", url: "https://www.instant-gaming.com/en/5639-buy-green-hell-pc-game-steam/?igr=eupqs" },
   { name: "Celeste", url: "https://www.instant-gaming.com/en/8003-buy-celeste-pc-mac-game-steam/?igr=eupqs" },
-  { name: "Mortal Kombat 11", url: "https://www.instant-gaming.com/en/3339-buy-mortal-kombat-11-pc-game-steam/?igr=eupqs" },
   { name: "Wreckfest", url: "https://www.instant-gaming.com/en/582-buy-wreckfest-pc-steam/?igr=eupqs" },
   { name: "DOOM", url: "https://www.instant-gaming.com/en/865-buy-doom-pc-steam/?igr=eupqs" },
   { name: "Injustice 2", url: "https://www.instant-gaming.com/en/1525-buy-injustice-2-pc-game-steam/?igr=eupqs" },
@@ -187,19 +184,13 @@ const games = [
   { name: "Outlast 2", url: "https://www.instant-gaming.com/en/606-buy-outlast-2-pc-game-steam/?igr=eupqs" },
   { name: "Have a Nice Death", url: "https://www.instant-gaming.com/en/10241-buy-have-a-nice-death-pc-game-steam/?igr=eupqs" },
   { name: "Mika and the Witch's Mountain", url: "https://www.instant-gaming.com/en/10397-buy-mika-and-the-witch-s-mountain-pc-game-steam/?igr=eupqs" },
-  { name: "Ori and the Will of the Wisps", url: "https://www.instant-gaming.com/en/19582-buy-ori-and-the-will-of-the-wisps-pc-game-steam/?igr=eupqs" },
-  { name: "Stray", url: "https://www.instant-gaming.com/en/17217-buy-stray-pc-mac-game-steam-latin-america/?igr=eupqs" },
   { name: "Dead Space (2008)", url: "https://www.instant-gaming.com/en/338-buy-dead-space-2008-pc-game-ea-app/?igr=eupqs" },
   { name: "High on Life", url: "https://www.instant-gaming.com/en/12163-buy-high-on-life-pc-game-steam/?igr=eupqs" },
   { name: "Darksiders III", url: "https://www.instant-gaming.com/en/2061-buy-darksiders-iii-pc-game-steam/?igr=eupqs" }
-  ];
+];
 
 const grid = document.getElementById('gameGrid');
-
-// Chave da API RAWG (rawg.io) - usada só para buscar as capas dos jogos
 const RAWG_API_KEY = 'd6b850e7067a44b6b036afccf55cee5d';
-
-// Guarda as capas já buscadas para não repetir requisições (em memória, some ao recarregar a página)
 const coverCache = {};
 
 function placeholderSvg(name){
@@ -249,7 +240,6 @@ async function loadCover(name, imgId){
       if (el) el.src = cover;
     }
   } catch (err) {
-    // Se der erro (ex: sem internet, limite de requisições), mantém o placeholder
     console.warn('Não foi possível carregar a capa de', name, err);
   }
 }
